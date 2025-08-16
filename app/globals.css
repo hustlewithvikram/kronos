@@ -25,3 +25,31 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* scrollbar track and thumb */
+
+/* For Webkit browsers (Chrome, Safari, Edge) */
+::-webkit-scrollbar {
+  width: 12px;               /* Width of the scrollbar */
+  height: 8px;              /* Height for horizontal scrollbar */
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;   /* Transparent track */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #7c3aed; /* Tailwind purple-500 */
+  border-radius: 9999px;     /* Fully rounded */
+  border: 2px solid transparent; /* Optional: adds spacing around thumb */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #9333ea; /* Darker purple on hover */
+}
+
+/* For Firefox */
+* {
+  scrollbar-width: 12px;          /* "auto" or "thin" */
+  scrollbar-color: #7c3aed transparent; /* thumb color, track color */
+}

@@ -1,83 +1,78 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
+import GetStartedButton from '../components/getstartedbutton';
 
 const HeroSection = () => {
+    const [isClient, setIsClient] = useState(false);
+
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
+
     return (
-        <section className="relative flex min-h-screen bg-black overflow-hidden">
-            <div className="relative z-10 flex w-full h-full">
-                {/* Left Image - 40% */}
-                <div className="w-2/5 flex items-center justify-center">
-                    <Image
-                        src="/images/orange.jpg"
-                        alt="Orange Juice"
-                        className="w-full h-screen object-cover"
-                        height={600}
-                        width={600}
-                    />
-                </div>
+        <section className="relative flex flex-col md:flex-row min-h-screen bg-black overflow-hidden">
+            {/* Left Image */}
+            <div className="w-full md:w-2/5 flex items-center justify-center relative">
+                <Image
+                    src="/images/orange.jpg"
+                    alt="Orange Juice"
+                    className="w-full h-80 sm:h-96 md:h-screen object-cover"
+                    height={800}
+                    width={800}
+                    priority
+                />
+            </div>
 
-                {/* Right Content - 60% */}
-                <div className="w-3/5 flex flex-col justify-center px-8 md:px-16 lg:px-24 py-12 gap-6">
-                    {/* Company Name */}
-                    <motion.h1
-                        initial={{ opacity: 0, x: 50 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.6 }}
-                        className="text-6xl sm:text-7xl lg:text-8xl font-thin text-white leading-tight font-bitcount uppercase"
-                    >
-                        Kronos Tech
-                    </motion.h1>
+            {/* Right Content */}
+            <div className="w-full md:w-3/5 relative flex flex-col justify-center">
+                {/* Background Image */}
+                <div
+                    className="absolute inset-0 bg-[url('/images/hero-bg.jpg')] bg-cover bg-center"
+                    style={{ filter: 'brightness(0.15)' }} // dims the image
+                />
 
-                    {/* Tagline */}
-                    <motion.p
-                        initial={{ opacity: 0, x: 50 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.8 }}
-                        className="text-2xl sm:text-3xl lg:text-4xl text-[#72a1e5] font-medium"
-                    >
-                        Code. Create. Conquer.
-                    </motion.p>
-
-                    {/* Short Value Proposition */}
-                    <motion.p
-                        initial={{ opacity: 0, x: 50 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 1 }}
-                        className="text-gray-400 max-w-xl text-lg sm:text-xl lg:text-2xl"
-                    >
-                        Crafting high-performance websites and Android apps with elegant, user-friendly design.
-                    </motion.p>
-
-                    {/* CTA Buttons with micro-interactions */}
+                {/* Content */}
+                <div className="relative z-10 px-6 sm:px-10 md:px-16 lg:px-24 py-12 flex flex-col gap-6">
                     <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 1.2 }}
-                        className="mt-8 flex gap-6 flex-wrap"
+                        initial="hidden"
+                        animate={isClient ? 'visible' : 'hidden'}
+                        variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.15 } } }}
+                        className="flex flex-col gap-4"
                     >
-                        <motion.button
-                            whileHover={{ scale: 1.05, backgroundColor: '#5e91d6' }}
-                            whileTap={{ scale: 0.95 }}
-                            onClick={() => {
-                                const el = document.getElementById('contact');
-                                if (el) el.scrollIntoView({ behavior: 'smooth' });
-                            }}
-                            className="px-8 py-4 bg-[#72a1e5] text-black font-semibold rounded-xl shadow-lg transition-all duration-300 text-lg"
+                        <motion.h1
+                            variants={{ hidden: { opacity: 0, x: 50 }, visible: { opacity: 1, x: 0 } }}
+                            transition={{ duration: 0.6 }}
+                            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-thin text-white leading-tight font-bitcount uppercase"
                         >
-                            Get Started
-                        </motion.button>
+                            Kronos Tech
+                        </motion.h1>
 
-                        <motion.a
-                            whileHover={{ scale: 1.05, backgroundColor: 'rgba(114,161,229,0.1)' }}
-                            whileTap={{ scale: 0.95 }}
-                            href="#services"
-                            className="px-8 py-4 border border-[#72a1e5] text-white rounded-xl transition duration-300 text-lg"
+                        <motion.p
+                            variants={{ hidden: { opacity: 0, x: 50 }, visible: { opacity: 1, x: 0 } }}
+                            transition={{ duration: 0.8 }}
+                            className="text-xl sm:text-2xl lg:text-3xl text-[#72a1e5] font-medium"
                         >
-                            Our Services
-                        </motion.a>
+                            Code. Create. Conquer.
+                        </motion.p>
+
+                        <motion.p
+                            variants={{ hidden: { opacity: 0, x: 50 }, visible: { opacity: 1, x: 0 } }}
+                            transition={{ duration: 1 }}
+                            className="text-gray-200 max-w-xl text-base sm:text-lg lg:text-xl"
+                        >
+                            Crafting high-performance websites and Android apps with elegant, user-friendly design.
+                        </motion.p>
+
+                        <motion.div
+                            variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
+                            transition={{ duration: 1.2 }}
+                            className="mt-8 flex flex-wrap gap-4 sm:gap-6"
+                        >
+                            <GetStartedButton />
+                        </motion.div>
                     </motion.div>
                 </div>
             </div>

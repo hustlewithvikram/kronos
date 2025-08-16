@@ -7,39 +7,50 @@ import TwitterIcon from '@mui/icons-material/Twitter';
 
 const Footer = () => {
     return (
-        <footer className="bg-black text-white py-12 px-6 sm:px-10 lg:px-20">
-            <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
+        <footer className="bg-[#111] text-white py-12 px-5 sm:px-10 lg:px-20">
+            <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-10 items-start">
 
                 {/* Left: Brand Info */}
-                <div>
-                    <h2 className="text-2xl font-bold tracking-wide text-[#72a1e5]">KRONOS</h2>
-                    <p className="mt-4 text-gray-400 text-sm leading-relaxed max-w-xs">
+                <div className="flex flex-col gap-4">
+                    <h2 className="text-2xl sm:text-3xl font-bold tracking-wide text-purple-500">KRONOS</h2>
+                    <p className="text-gray-400 text-sm sm:text-base leading-relaxed max-w-xs">
                         We craft high-performance web & mobile experiences built for growth. Scalable, secure, stunning.
                     </p>
                 </div>
 
                 {/* Center: Navigation Links */}
-                <div className="flex flex-col gap-2 text-sm">
+                <div className="flex flex-col gap-2 text-sm sm:text-base">
                     <h3 className="font-semibold text-white mb-2">Quick Links</h3>
-                    <a href="#about" className="text-gray-400 hover:text-white transition">About</a>
-                    <a href="#services" className="text-gray-400 hover:text-white transition">Services</a>
-                    <a href="#projects" className="text-gray-400 hover:text-white transition">Projects</a>
-                    <a href="#contact" className="text-gray-400 hover:text-white transition">Contact</a>
+                    {['About', 'Services', 'Projects', 'Contact'].map((link) => (
+                        <a
+                            key={link}
+                            href={`#${link.toLowerCase()}`}
+                            className="text-gray-400 hover:text-purple-500 transition-colors duration-300"
+                        >
+                            {link}
+                        </a>
+                    ))}
                 </div>
 
                 {/* Right: Social Icons */}
                 <div className="flex flex-col gap-4 items-start md:items-end">
                     <h3 className="font-semibold text-white">Follow Us</h3>
                     <div className="flex gap-4">
-                        <a href="https://github.com" target="_blank" rel="noopener noreferrer">
-                            <GitHubIcon className="text-gray-400 hover:text-white transition" fontSize="medium" />
-                        </a>
-                        <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer">
-                            <LinkedInIcon className="text-gray-400 hover:text-white transition" fontSize="medium" />
-                        </a>
-                        <a href="https://twitter.com" target="_blank" rel="noopener noreferrer">
-                            <TwitterIcon className="text-gray-400 hover:text-white transition" fontSize="medium" />
-                        </a>
+                        {[
+                            { icon: <GitHubIcon />, link: 'https://github.com' },
+                            { icon: <LinkedInIcon />, link: 'https://linkedin.com' },
+                            { icon: <TwitterIcon />, link: 'https://twitter.com' },
+                        ].map(({ icon, link }, idx) => (
+                            <a
+                                key={idx}
+                                href={link}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="p-2 rounded-full bg-gray-800 hover:bg-purple-500 transition-colors duration-300 text-gray-400 hover:text-white"
+                            >
+                                {icon}
+                            </a>
+                        ))}
                     </div>
                 </div>
             </div>

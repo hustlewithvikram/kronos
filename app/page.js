@@ -1,5 +1,4 @@
 import '../app/globals.css';
-import Image from "next/image";
 import HeroSection from "./sections/hero";
 import AboutSection from "./sections/about";
 import ServicesSection from "./sections/services";

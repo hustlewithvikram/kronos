@@ -17,7 +17,7 @@ const Navbar = () => {
 
     return (
         <nav className="fixed top-0 w-full z-50 text-white">
-            <div className="mx-auto px-4 sm:px-6 lg:px-8 h-16 flex justify-between items-center">
+            <div className="mx-auto px-4 sm:px-6 lg:px-8 h-16 flex justify-between items-center bg-transparent">
                 <Link href="/" className="text-2xl font-bold tracking-tight text-white">
                     Kronos
                 </Link>
@@ -28,7 +28,7 @@ const Navbar = () => {
                         <Link
                             key={link.name}
                             href={link.href}
-                            className="text-white hover:text-[#72a1e5] font-medium transition duration-200"
+                            className="text-white hover:text-[#72a1e5] font-medium transition duration-300"
                         >
                             {link.name}
                         </Link>
@@ -38,39 +38,77 @@ const Navbar = () => {
                 {/* Mobile Toggle */}
                 <div className="md:hidden">
                     <button
-                        onClick={() => setIsOpen(!isOpen)}
+                        onClick={() => setIsOpen(true)}
                         className="text-white focus:outline-none focus:ring-2 focus:ring-[#72a1e5] rounded"
                         aria-label="Toggle menu"
                     >
-                        {isOpen ? <CloseIcon /> : <MenuIcon />}
+                        <MenuIcon fontSize="large" />
                     </button>
                 </div>
             </div>
 
-            {/* Mobile Slide-in Menu */}
+            {/* Right-side Slide Panel */}
             <AnimatePresence>
                 {isOpen && (
-                    <motion.div
-                        initial={{ scaleY: 0, opacity: 0 }}
-                        animate={{ scaleY: 1, opacity: 1 }}
-                        exit={{ scaleY: 0, opacity: 0 }}
-                        transition={{ duration: 0.25 }}
-                        style={{ originY: 0 }}
-                        className="md:hidden bg-black/95 overflow-hidden"
-                    >
-                        <div className="flex flex-col space-y-4 px-6 py-6">
-                            {links.map((link) => (
-                                <Link
-                                    key={link.name}
-                                    href={link.href}
+                    <>
+                        {/* Overlay */}
+                        <motion.div
+                            className="fixed inset-0 bg-black/50 z-40"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            onClick={() => setIsOpen(false)}
+                        />
+
+                        {/* Side Panel */}
+                        <motion.div
+                            className="fixed top-0 right-0 h-full w-64 sm:w-80 bg-black/95 z-50 shadow-xl flex flex-col px-6 py-8"
+                            initial={{ x: '100%' }}
+                            animate={{ x: 0 }}
+                            exit={{ x: '100%' }}
+                            transition={{ type: 'tween', duration: 0.3, ease: 'easeInOut' }}
+                        >
+                            {/* Close Button */}
+                            <div className="flex justify-end mb-8">
+                                <button
                                     onClick={() => setIsOpen(false)}
-                                    className="text-white hover:text-[#72a1e5] text-lg py-2 transition-colors"
+                                    className="text-white focus:outline-none"
                                 >
-                                    {link.name}
-                                </Link>
-                            ))}
-                        </div>
-                    </motion.div>
+                                    <CloseIcon fontSize="large" />
+                                </button>
+                            </div>
+
+                            {/* Links */}
+                            <motion.div
+                                initial="hidden"
+                                animate="visible"
+                                exit="hidden"
+                                variants={{
+                                    hidden: {},
+                                    visible: {
+                                        transition: { staggerChildren: 0.1, delayChildren: 0.05 },
+                                    },
+                                }}
+                                className="flex flex-col space-y-6"
+                            >
+                                {links.map((link) => (
+                                    <motion.a
+                                        key={link.name}
+                                        href={link.href}
+                                        onClick={() => setIsOpen(false)}
+                                        variants={{
+                                            hidden: { opacity: 0, x: 20 },
+                                            visible: { opacity: 1, x: 0 },
+                                        }}
+                                        transition={{ duration: 0.25, ease: 'easeOut' }}
+                                        className="text-white hover:text-[#72a1e5] text-lg font-medium transition-colors"
+                                    >
+                                        {link.name}
+                                    </motion.a>
+                                ))}
+                            </motion.div>
+                        </motion.div>
+                    </>
                 )}
             </AnimatePresence>
         </nav>
