@@ -7,6 +7,8 @@ import { motion, useReducedMotion } from 'framer-motion';
 // Bring in your existing shared UI
 import Navbar from '@/app/components/navbar';
 import Footer from '@/app/components/footer';
+import { companyInfo } from '../data/companydata';
+import Image from 'next/image';
 
 const AboutSection = () => {
     const reduceMotion = useReducedMotion();
@@ -123,7 +125,7 @@ const AboutSection = () => {
                         <h2 className="text-3xl font-extrabold sm:text-4xl md:text-5xl">
                             About{' '}
                             <span className="bg-gradient-to-r from-cyan-700 via-blue-700 to-fuchsia-700 bg-clip-text text-transparent">
-                                Kronos Tech
+                                {companyInfo.name} Studio
                             </span>
                         </h2>
                         <p className="mt-4 max-w-2xl text-base text-gray-600 sm:text-lg">
@@ -261,10 +263,12 @@ const AboutSection = () => {
                         <div className="mt-5 rounded-2xl border border-gray-200 bg-white/60 p-6 backdrop-blur-xl sm:p-8 shadow-[0_1px_0_rgba(0,0,0,0.06)]">
                             <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
                                 {founder.avatar.src ? (
-                                    <img
+                                    <Image
                                         src={founder.avatar.src}
                                         alt={founder.avatar.alt}
                                         className="h-20 w-20 rounded-full object-cover ring-2 ring-gray-200"
+                                        height={200}
+                                        width={200}
                                     />
                                 ) : (
                                     <div className="h-20 w-20 rounded-full bg-gradient-to-br from-cyan-300 to-blue-300 ring-2 ring-gray-200" aria-hidden />

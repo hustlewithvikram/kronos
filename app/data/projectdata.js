@@ -13,7 +13,7 @@ export function formatDateUTC(date) {
 // Central source of truth for list + detail pages
 export const projects = [
     {
-        slug: 'shopnow',
+        route: 'shopnow',
         name: 'Shopnow',
         summary:
             'A modern e‑commerce demo built with Next.js and TypeScript. Clean architecture, optimized fonts, and Vercel deployment.',
@@ -45,7 +45,7 @@ export const projects = [
         timeline: '1–2 weeks (demo)',
     },
     {
-        slug: 'advit',
+        route: 'advit',
         name: 'Advit',
         summary:
             'A sleek platform for 3D design and digital services built on Next.js App Router with smooth animations.',
@@ -76,7 +76,7 @@ export const projects = [
         timeline: '2–3 weeks',
     },
     {
-        slug: 'deepnotes-flutter',
+        route: 'deepnotes-flutter',
         name: 'DeepNotes (Flutter)',
         summary:
             'Cross‑platform concept for Deep Notes—offline note‑taking with clean UI and fast UX.',
@@ -104,7 +104,7 @@ export const projects = [
         timeline: '2–4 weeks (MVP)',
     },
     {
-        slug: 'untitled',
+        route: 'untitled',
         name: 'Untitled',
         summary:
             'A minimal, fast site deployed on Vercel—clean layout and modern build tooling.',
@@ -128,7 +128,7 @@ export const projects = [
         timeline: '1 week',
     },
     {
-        slug: 'nike',
+        route: 'nike',
         name: 'Nike UI',
         summary:
             'A UI exploration inspired by Nike—product presentation and rich visual layout for a store concept.',
@@ -152,7 +152,7 @@ export const projects = [
         timeline: '1–2 weeks',
     },
     {
-        slug: 'vikram-portfolio',
+        route: 'vikram-portfolio',
         name: 'Portfolio (vikram.is-a.dev)',
         summary:
             'Personal portfolio—fast, accessible, and deployed at vikram.is-a.dev.',

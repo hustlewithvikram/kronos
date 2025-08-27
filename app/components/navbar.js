@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation';
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
 import { motion, AnimatePresence } from 'framer-motion';
+import { companyInfo } from '../data/companydata';
 
 const links = [
     { name: 'Home', href: '/' },
@@ -20,35 +21,47 @@ const Navbar = () => {
     const [isScrolled, setIsScrolled] = useState(false);
     const pathname = usePathname();
 
-    // Handle scroll effect for mobile navbar background
+    // Handle scroll effect for background (changes only for desktop view)
     useEffect(() => {
-        const handleScroll = () => {
-            setIsScrolled(window.scrollY > 10);
-        };
+        const handleScroll = () => setIsScrolled(window.scrollY > 10);
         window.addEventListener('scroll', handleScroll);
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
-    // Close mobile menu when route changes
+    // Disable body scroll when sidebar is open
+    useEffect(() => {
+        if (isOpen) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = '';
+        }
+        return () => {
+            document.body.style.overflow = '';
+        };
+    }, [isOpen]);
+
+    // Close sidebar when route changes
     useEffect(() => {
         setIsOpen(false);
     }, [pathname]);
 
     return (
-        <nav className={`fixed top-0 w-full z-50 transition-all duration-300 ${isScrolled ? 'bg-white/95 backdrop-blur-md py-2 shadow-lg md:bg-transparent md:backdrop-blur-none md:shadow-none' : 'bg-white/90 md:bg-transparent'} md:py-4`}>
-            <div className="mx-auto px-4 sm:px-6 lg:px-8 h-16 flex justify-between items-center">
-                {/* Logo - Black for desktop, white for mobile */}
+        <nav
+            className={`fixed top-0 w-full z-50 transition-all duration-300 md:py-4`}
+        >
+            <div className="mx-auto px-4 py-8 sm:px-6 lg:px-8 h-12 flex justify-between items-center">
+                {/* Logo */}
                 <Link href="/" className="flex items-center space-x-2 group">
                     <motion.div
                         whileHover={{ scale: 1.05 }}
-                        className="text-2xl font-bold tracking-tight text-black md:text-black"
+                        className="text-2xl font-bold tracking-tight text-black"
                     >
-                        Kronos
+                        {companyInfo.name}
                     </motion.div>
                     <span className="w-2 h-2 bg-cyan-500 rounded-full group-hover:animate-pulse"></span>
                 </Link>
 
-                {/* Desktop Nav - Black Text */}
+                {/* Desktop Nav */}
                 <div className="hidden md:flex items-center gap-8">
                     {links.map((link) => {
                         const isActive = pathname === link.href;
@@ -56,7 +69,8 @@ const Navbar = () => {
                             <Link
                                 key={link.name}
                                 href={link.href}
-                                className={`relative font-medium transition-all duration-300 px-1 py-2 ${isActive ? 'text-cyan-600 font-semibold' : 'text-gray-800 hover:text-cyan-600'}`}
+                                className={`relative font-medium transition-all duration-300 px-1 py-2
+                  ${isActive ? 'text-cyan-600 font-semibold' : 'text-gray-800 hover:text-cyan-600'}`}
                             >
                                 {link.name}
                                 {isActive && (
@@ -71,11 +85,11 @@ const Navbar = () => {
                     })}
                 </div>
 
-                {/* Mobile Toggle - Black Icon */}
+                {/* Mobile Toggle */}
                 <div className="md:hidden">
                     <motion.button
                         onClick={() => setIsOpen(true)}
-                        className="text-gray-800 focus:outline-none p-2 rounded-lg hover:bg-gray-100 transition-colors"
+                        className="text-gray-800 focus:outline-none p-2 rounded-lg hover:bg-gray-200 transition-colors"
                         whileTap={{ scale: 0.95 }}
                         aria-label="Toggle menu"
                     >
@@ -84,35 +98,35 @@ const Navbar = () => {
                 </div>
             </div>
 
-            {/* Mobile Menu - Medium Dark Background */}
+            {/* Mobile Menu */}
             <AnimatePresence>
                 {isOpen && (
                     <>
                         {/* Overlay */}
                         <motion.div
-                            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 md:hidden"
+                            className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 md:hidden"
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
                             onClick={() => setIsOpen(false)}
                         />
 
-                        {/* Side Panel - Medium Dark Background */}
+                        {/* Sidebar */}
                         <motion.div
-                            className="fixed top-0 right-0 h-full w-80 bg-gray-900 z-50 shadow-2xl flex flex-col px-6 py-8 border-l border-gray-700 md:hidden"
+                            className="fixed top-0 right-0 h-full w-80 bg-white/95 backdrop-blur-md z-50 shadow-2xl flex flex-col px-6 py-8 border-l border-gray-200 md:hidden"
                             initial={{ x: '100%' }}
                             animate={{ x: 0 }}
                             exit={{ x: '100%' }}
                             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
                         >
-                            {/* Header with Close Button */}
+                            {/* Header */}
                             <div className="flex justify-between items-center mb-10">
-                                <div className="text-xl font-bold text-white">
-                                    Kronos
+                                <div className="text-xl font-bold text-gray-900">
+                                    {companyInfo.name}
                                 </div>
                                 <motion.button
                                     onClick={() => setIsOpen(false)}
-                                    className="text-white p-2 rounded-lg hover:bg-white/10 transition-colors"
+                                    className="text-gray-700 p-2 rounded-lg hover:bg-gray-100 transition-colors"
                                     whileHover={{ rotate: 90 }}
                                     transition={{ duration: 0.2 }}
                                 >
@@ -127,11 +141,9 @@ const Navbar = () => {
                                 exit="hidden"
                                 variants={{
                                     hidden: {},
-                                    visible: {
-                                        transition: { staggerChildren: 0.1, delayChildren: 0.2 },
-                                    },
+                                    visible: { transition: { staggerChildren: 0.1, delayChildren: 0.2 } },
                                 }}
-                                className="flex flex-col space-y-6 flex-1"
+                                className="flex flex-col space-y-4 flex-1"
                             >
                                 {links.map((link) => {
                                     const isActive = pathname === link.href;
@@ -147,7 +159,10 @@ const Navbar = () => {
                                             <Link
                                                 href={link.href}
                                                 onClick={() => setIsOpen(false)}
-                                                className={`text-lg font-medium transition-all duration-300 py-3 block px-4 rounded-lg ${isActive ? 'bg-cyan-600/20 text-cyan-400 border-l-4 border-cyan-500' : 'text-gray-200 hover:text-white hover:bg-white/5'}`}
+                                                className={`text-lg font-medium transition-all duration-300 py-3 block px-4 rounded-lg
+                          ${isActive
+                                                        ? 'bg-cyan-100 text-cyan-700 border-l-4 border-cyan-500'
+                                                        : 'text-gray-800 hover:text-black hover:bg-gray-100'}`}
                                             >
                                                 {link.name}
                                             </Link>
@@ -156,19 +171,25 @@ const Navbar = () => {
                                 })}
                             </motion.div>
 
-                            {/* Contact Info in Mobile Menu */}
+                            {/* Contact Info */}
                             <motion.div
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: 0.5 }}
-                                className="pt-8 border-t border-gray-700 mt-8"
+                                className="pt-8 border-t border-gray-200 mt-8"
                             >
-                                <div className="text-gray-400 text-sm mb-4">Get in touch</div>
-                                <a href="mailto:contact@kronos.com" className="text-cyan-400 hover:text-cyan-300 transition-colors block mb-2">
-                                    contact@kronos.com
+                                <div className="text-gray-600 text-sm mb-2">Get in touch</div>
+                                <a
+                                    href="mailto:contact@kronos.com"
+                                    className="text-cyan-600 hover:text-cyan-500 transition-colors block mb-1"
+                                >
+                                    {companyInfo.email}
                                 </a>
-                                <a href="tel:+1234567890" className="text-cyan-400 hover:text-cyan-300 transition-colors block">
-                                    +1 (234) 567-890
+                                <a
+                                    href="tel:+1234567890"
+                                    className="text-cyan-600 hover:text-cyan-500 transition-colors block"
+                                >
+                                    {companyInfo.phoneNumber}
                                 </a>
                             </motion.div>
                         </motion.div>

@@ -7,9 +7,10 @@ import { motion, useReducedMotion } from 'framer-motion';
 // Adjust imports as needed for your project structure
 import Navbar from '@/app/components/navbar';
 import Footer from '@/app/components/footer';
+import { companyInfo } from '../data/companydata';
 
 const MAX_MESSAGE_LEN = 2000;
-const CONTACT_EMAIL = 'contact@example.com';
+const CONTACT_EMAIL = companyInfo.email;
 
 const initial = {
     name: '',
@@ -66,25 +67,60 @@ export default function ContactPage() {
             setStatus({ type: 'error', message: err });
             return;
         }
+
         try {
-            setStatus({ type: 'sending', message: '' });
+            setStatus({ type: 'sending', message: 'Sending your message...' });
 
-            // API route example (uncomment and implement)
-            // const res = await fetch('/api/contact', {
-            //   method: 'POST',
-            //   headers: { 'Content-Type': 'application/json' },
-            //   body: JSON.stringify(values),
-            // });
-            // if (!res.ok) throw new Error('Network error');
+            // First try the API route
+            const res = await fetch('/api/send-mail', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    name: values.name,
+                    email: values.email,
+                    subject: values.subject,
+                    message: values.message,
+                    company: values.company,
+                    budget: values.budget
+                }),
+            });
 
-            // Simulate delay for UX only (remove in production)
-            await new Promise((r) => setTimeout(r, 700));
+            const data = await res.json();
 
+            if (!res.ok) {
+                // If API fails, try the mailto fallback
+                console.warn('API route failed, falling back to mailto');
+                window.location.href = mailtoHref;
+                setStatus({
+                    type: 'success',
+                    message: 'Redirecting to your email client. Please send the pre-filled message.'
+                });
+
+                // Reset form after a delay
+                setTimeout(() => {
+                    setValues(initial);
+                    setErrors({});
+                }, 3000);
+
+                return;
+            }
+
+            // If API succeeds
             setStatus({ type: 'success', message: 'Thanks! Message sent successfully.' });
             setValues(initial);
             setErrors({});
-        } catch (e2) {
-            setStatus({ type: 'error', message: 'Something went wrong. Please try again.' });
+        } catch (error) {
+            console.error('Error sending message:', error);
+
+            // Fallback to mailto if fetch fails completely
+            setStatus({
+                type: 'info',
+                message: 'Opening your email client. Please send the pre-filled message.'
+            });
+
+            setTimeout(() => {
+                window.location.href = mailtoHref;
+            }, 1000);
         }
     };
 
@@ -118,7 +154,6 @@ export default function ContactPage() {
     return (
         <div className="min-h-screen bg-[#f5f7fb] text-gray-900 flex flex-col overflow-x-hidden">
             <Navbar />
-
             <section id="contact" aria-label="Contact" className="relative w-full overflow-hidden">
                 {/* Background accents clipped safely */}
                 <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
@@ -313,11 +348,13 @@ export default function ContactPage() {
                                 <motion.div
                                     initial={{ opacity: 0, y: 6 }}
                                     animate={{ opacity: 1, y: 0 }}
-                                    className={`mt-2 text-sm ${status.type === 'error'
-                                        ? 'text-rose-600'
+                                    className={`mt-4 p-3 rounded-lg ${status.type === 'error'
+                                        ? 'bg-rose-50 text-rose-700 border border-rose-200'
                                         : status.type === 'success'
-                                            ? 'text-emerald-600'
-                                            : 'text-gray-600'
+                                            ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                                            : status.type === 'info'
+                                                ? 'bg-blue-50 text-blue-700 border border-blue-200'
+                                                : 'bg-gray-50 text-gray-700 border border-gray-200'
                                         }`}
                                     role={status.type === 'error' ? 'alert' : undefined}
                                 >
@@ -331,13 +368,6 @@ export default function ContactPage() {
                                     Messages are sent securely. No spam, ever.
                                 </p>
                                 <div className="flex flex-col-reverse gap-3 sm:flex-row">
-                                    <a
-                                        href={mailtoHref}
-                                        className="inline-flex items-center justify-center rounded-lg border border-gray-200 bg-white/70 px-5 py-3 text-sm font-medium text-gray-900 transition-colors hover:bg-white focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-300"
-                                        aria-label="Open email client with pre-filled message"
-                                    >
-                                        Use Email App
-                                    </a>
                                     <button
                                         type="submit"
                                         disabled={status.type === 'sending'}
@@ -370,8 +400,15 @@ export default function ContactPage() {
                                         {CONTACT_EMAIL}
                                     </a>
                                 </li>
-                                <li>Office hours: Mon–Fri, 10:00–18:00 IST</li>
-                                <li>Response SLA: within 24 hours</li>
+                                <li>Office hours: Mon–Fri, 10:00–6:00</li>
+                                <li>Response: within 24 hours</li>
+                                <div>
+                                    <b>Address:<br /></b>
+                                    {Object.entries(companyInfo.address)
+                                        .map(([key, value]) => `${value}`)
+                                        .join(", ")}
+
+                                </div>
                             </ul>
 
                             <div className="mt-6 h-px w-full bg-gray-200" />
@@ -419,13 +456,12 @@ export default function ContactPage() {
                             <div className="mt-6 h-px w-full bg-gray-200" />
 
                             <p className="mt-6 text-xs text-gray-600">
-                                Tip: Include goals, target audience, success criteria, and deadlines for a faster, tailored proposal.
+                                Prefer to email directly? Use the contact form or send to our email address above.
                             </p>
                         </motion.aside>
                     </div>
                 </div>
             </section>
-
             <Footer />
         </div>
     );

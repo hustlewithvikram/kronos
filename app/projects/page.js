@@ -19,6 +19,7 @@ const Projects = () => {
             <Navbar />
 
             <section id="projects" aria-label="Projects" className="relative w-full overflow-hidden">
+                {/* Background accents */}
                 <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
                     <div className="absolute -top-24 -left-24 h-72 w-72 rounded-full bg-gradient-to-br from-cyan-200 to-blue-200 opacity-50 blur-[100px]" />
                     <div className="absolute -bottom-24 -right-24 h-80 w-80 rounded-full bg-gradient-to-tr from-fuchsia-200 to-purple-200 opacity-50 blur-[110px]" />
@@ -40,10 +41,12 @@ const Projects = () => {
                             </span>
                         </h2>
                         <p className="mt-4 max-w-2xl text-base text-gray-600 sm:text-lg">
-                            A handpicked set of live and source projects spanning product UIs, platforms, and portfolios.
+                            A handpicked set of live and source projects spanning product UIs,
+                            platforms, and portfolios.
                         </p>
                     </motion.header>
 
+                    {/* Project cards */}
                     <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
                         {projects.map((p, i) => (
                             <motion.article
@@ -54,7 +57,7 @@ const Projects = () => {
                                 viewport={{ once: true, margin: '-80px' }}
                                 whileHover={reduceMotion ? {} : { y: -4 }}
                                 transition={{ duration: 0.2 }}
-                                className="group relative overflow-hidden flex flex-col justify-between rounded-2xl border border-gray-200 bg-white/60 p-6 backdrop-blur-xl shadow-[0_1px_0_rgba(0,0,0,0.06)]"
+                                className="group relative overflow-hidden flex flex-col justify-between rounded-2xl border border-gray-200 bg-white/60 backdrop-blur-xl shadow-[0_1px_0_rgba(0,0,0,0.06)] hover:shadow-md transition-shadow"
                             >
                                 {/* Background accent */}
                                 <div
@@ -62,11 +65,16 @@ const Projects = () => {
                                     className="pointer-events-none absolute -top-10 -right-10 h-40 w-40 rounded-full bg-gradient-to-br from-blue-600/20 to-cyan-600/20 opacity-15 blur-2xl transition-opacity duration-300 group-hover:opacity-25"
                                 />
 
-                                {/* Content */}
-                                <div>
+                                {/* Main clickable content */}
+                                <Link
+                                    href={`/projects/${p.route}`}
+                                    className="flex-1 flex flex-col p-6 cursor-pointer"
+                                    aria-label={`${p.name} details`}
+                                >
                                     <h3 className="text-lg font-semibold text-gray-900 sm:text-xl break-words">
                                         {p.name}
                                     </h3>
+
                                     <p className="mt-2 text-sm leading-relaxed text-gray-700 line-clamp-4">
                                         {p.summary}
                                     </p>
@@ -74,7 +82,10 @@ const Projects = () => {
                                     {p.stack?.length ? (
                                         <div className="mt-4 flex flex-wrap gap-2 text-xs text-gray-700">
                                             {p.stack.map((t) => (
-                                                <span key={t} className="rounded-md border border-gray-200 bg-white/70 px-2.5 py-1 backdrop-blur-sm">
+                                                <span
+                                                    key={t}
+                                                    className="rounded-md border border-gray-200 bg-white/70 px-2.5 py-1 backdrop-blur-sm"
+                                                >
                                                     {t}
                                                 </span>
                                             ))}
@@ -84,7 +95,10 @@ const Projects = () => {
                                     {p.languages?.length ? (
                                         <div className="mt-3 flex flex-wrap gap-2 text-xs text-gray-700">
                                             {p.languages.map((lang) => (
-                                                <span key={lang.label} className="rounded-md border border-gray-200 bg-white/70 px-2.5 py-1 backdrop-blur-sm">
+                                                <span
+                                                    key={lang.label}
+                                                    className="rounded-md border border-gray-200 bg-white/70 px-2.5 py-1 backdrop-blur-sm"
+                                                >
                                                     {lang.label} {lang.percent}
                                                 </span>
                                             ))}
@@ -93,7 +107,9 @@ const Projects = () => {
 
                                     <div className="mt-4 flex flex-wrap items-center gap-3 text-xs text-gray-700">
                                         {typeof p.stars === 'number' ? (
-                                            <span className="rounded-md border border-gray-200 bg-white/70 px-2.5 py-1 backdrop-blur-sm">★ {p.stars}</span>
+                                            <span className="rounded-md border border-gray-200 bg-white/70 px-2.5 py-1 backdrop-blur-sm">
+                                                ★ {p.stars}
+                                            </span>
                                         ) : null}
                                         {p.updated ? (
                                             <span className="rounded-md border border-gray-200 bg-white/70 px-2.5 py-1 backdrop-blur-sm">
@@ -101,10 +117,10 @@ const Projects = () => {
                                             </span>
                                         ) : null}
                                     </div>
-                                </div>
+                                </Link>
 
-                                {/* Footer links */}
-                                <div className="mt-6 flex flex-wrap items-center gap-4 text-sm font-medium">
+                                {/* Footer links (NOT part of the card link) */}
+                                <div className="px-6 pb-6 mt-2 flex flex-wrap items-center gap-4 text-sm font-medium">
                                     {p.repo ? (
                                         <a
                                             href={p.repo}
@@ -128,18 +144,11 @@ const Projects = () => {
                                         </a>
                                     ) : null}
                                 </div>
-
-                                {/* Whole-card link to details */}
-                                <Link
-                                    href={`/projects/${p.project}`}
-                                    aria-label={`${p.name} details`}
-                                    className="absolute inset-0 z-10"
-                                    tabIndex={-1}
-                                />
                             </motion.article>
                         ))}
                     </div>
 
+                    {/* View all repos link */}
                     <motion.div
                         variants={fade(0.15)}
                         initial="hidden"

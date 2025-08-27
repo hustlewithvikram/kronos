@@ -40,32 +40,29 @@ const ContactForm = () => {
         try {
             setStatus({ type: 'sending', message: '' });
 
-            // TODO: Wire up your API route here (e.g., /api/contact) and remove the simulation below.
-            // const res = await fetch('/api/contact', {
-            //   method: 'POST',
-            //   headers: { 'Content-Type': 'application/json' },
-            //   body: JSON.stringify(values),
-            // });
-            // if (!res.ok) throw new Error('Network error');
+            const res = await fetch('/api/send-mail', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(values),
+            });
 
-            await new Promise((res) => setTimeout(res, 800)); // simulate
+            if (!res.ok) throw new Error('Network error');
 
             setStatus({ type: 'success', message: 'Thanks! Message sent successfully.' });
             setValues(initial);
         } catch (e2) {
-            setStatus({ type: 'error', message: 'Something went wrong. Please try again.' });
+            // fallback: open user's mail client with prefilled data
+            setStatus({ type: 'error', message: 'Email service unavailable. Using your email app instead.' });
+
+            const to = 'contact@kronos.com';
+            const subject = encodeURIComponent(values.subject || 'Project inquiry');
+            const body = encodeURIComponent(
+                `Name: ${values.name}\nEmail: ${values.email}\n\nMessage:\n${values.message}`
+            );
+
+            window.location.href = `mailto:${to}?subject=${subject}&body=${body}`;
         }
     };
-
-    // Mailto fallback (opens email client prefilled)
-    const mailtoHref = useMemo(() => {
-        const to = 'contact@kronos.com';
-        const subject = encodeURIComponent(values.subject || 'Project inquiry');
-        const body = encodeURIComponent(
-            `Name: ${values.name}\nEmail: ${values.email}\n\nMessage:\n${values.message}`
-        );
-        return `mailto:${to}?subject=${subject}&body=${body}`;
-    }, [values]);
 
     return (
         <section
@@ -191,13 +188,6 @@ const ContactForm = () => {
                             This form uses secure transport. No spam, ever.
                         </p>
                         <div className="flex flex-col-reverse gap-3 sm:flex-row">
-                            <a
-                                href={mailtoHref}
-                                className="inline-flex items-center justify-center rounded-lg border border-gray-200 bg-white/70 px-5 py-3 text-sm font-medium text-gray-900 transition-colors hover:bg-white focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-300"
-                                aria-label="Open email client with pre-filled message"
-                            >
-                                Use Email App
-                            </a>
                             <button
                                 type="submit"
                                 disabled={status.type === 'sending'}

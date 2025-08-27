@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
+import { companyInfo } from '../../data/companydata';
 
 const AboutSection = () => {
     const reduceMotion = useReducedMotion();
@@ -37,7 +38,7 @@ const AboutSection = () => {
                     <h2 className="text-3xl font-extrabold sm:text-4xl md:text-5xl">
                         About{' '}
                         <span className="bg-gradient-to-r from-cyan-700 via-blue-700 to-fuchsia-700 bg-clip-text text-transparent">
-                            Kronos Studio
+                            {companyInfo.name} Studio
                         </span>
                     </h2>
                     <p className="mx-auto mt-5 max-w-2xl text-base text-gray-600 sm:text-lg">

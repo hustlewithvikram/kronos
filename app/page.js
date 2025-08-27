@@ -1,13 +1,14 @@
 'use client'
 
 import '../app/globals.css';
-import HeroSection from "./sections/hero";
-import AboutSection from "./sections/about";
-import ServicesSection from "./sections/services";
+import HeroSection from "./components/sections/hero";
+import AboutSection from "./components/sections/about";
+import ServicesSection from "./components/sections/services";
 import Navbar from "./components/navbar";
 import Footer from "./components/footer";
 import ContactForm from './components/contactform';
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 
 
 // Function to get a random Picsum image
@@ -30,10 +31,12 @@ const ImageSidebar = () => {
   return (
     <div className='hidden md:block md:w-1/3 md:h-screen md:fixed md:left-0 md:top-0'>
       <div className="relative w-full h-full">
-        <img
+        <Image
           src={imageUrl}
           alt="Decorative background image"
           className="w-full h-full object-cover"
+          height={200}
+          width={200}
         />
 
         {/* Optional: Branding in the sidebar */}
